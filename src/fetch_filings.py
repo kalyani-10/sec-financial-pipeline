@@ -17,12 +17,11 @@ def fetch_company_facts(cik, company_name):
         data = response.json()
         us_gaap = data.get("facts", {}).get("us-gaap", {})
 
-        # Check all possible SEC XBRL tags for Revenue / Sales
+        # List of tags SEC uses for total revenue
         revenue_keys = [
-            "Revenues",
             "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "Revenues",
             "SalesRevenueNet",
-            "TotalRevenuesAndOtherIncome",
         ]
 
         units = []
@@ -36,7 +35,6 @@ def fetch_company_facts(cik, company_name):
         seen_years = set()
 
         for item in units:
-            # Filter for 10-K annual reports from 2020 onward
             if (
                 item.get("form") == "10-K"
                 and item.get("fy", 0) >= 2020
